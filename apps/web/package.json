@@ -49,6 +49,7 @@
     "cmdk": "^1.0.0",
     "cross-env": "^7.0.3",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
     "drizzle-kit": "^0.31.1",
     "drizzle-orm": "^0.44.2",
     "embla-carousel-react": "^8.5.1",

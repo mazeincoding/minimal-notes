@@ -2,7 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useScreenStore } from "@/stores/screen-store";
-import { ChevronRightIcon, FileTextIcon, UserIcon } from "lucide-react";
+import { ChevronRightIcon, FileTextIcon, PaletteIcon, UserIcon } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 
 export function Home() {
@@ -24,6 +24,14 @@ export function Home() {
       color: "bg-rose-500",
       onClick: () => {
         setScreen(session ? "account" : "signin");
+      },
+    },
+    {
+      icon: PaletteIcon,
+      title: "Theme",
+      color: "bg-blue-500",
+      onClick: () => {
+        setScreen("theme");
       },
     },
   ];

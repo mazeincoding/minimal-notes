@@ -4,6 +4,7 @@ import { Notes } from "@/screens/notes";
 import { Editor } from "@/screens/editor";
 import { Account } from "@/screens/account";
 import { SignIn } from "@/screens/sign-in";
+import { Theme } from "@/screens/theme";
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
       <Editor />
       <Account />
       <SignIn />
+      <Theme />
     </main>
   );
 }

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type Screen = "home" | "notes" | "editor" | "account" | "signin";
+type Screen = "home" | "notes" | "editor" | "account" | "signin" | "theme";
 
 // Screen display configuration
 const SCREEN_CONFIG: Record<Screen, { displayName: string }> = {
@@ -9,6 +9,7 @@ const SCREEN_CONFIG: Record<Screen, { displayName: string }> = {
   editor: { displayName: "Editor" },
   account: { displayName: "Account" },
   signin: { displayName: "Sign in" },
+  theme: { displayName: "Theme" },
 };
 
 interface ScreenStore {

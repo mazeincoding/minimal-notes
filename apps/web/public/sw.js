@@ -1,23 +1,23 @@
-const CACHE_NAME = 'minimal-notes-v1';
-const urlsToCache = [
-  '/',
-  '/manifest.json',
-  '/apple-touch-icon.png'
-];
-
+// Service worker disabled - no caching
 self.addEventListener('install', (event) => {
+  // Skip waiting to activate immediately
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  // Clear all caches
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          return caches.delete(cacheName);
+        })
+      );
+    })
   );
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      })
-  );
+  // Always fetch from network, no caching
+  event.respondWith(fetch(event.request));
 }); 

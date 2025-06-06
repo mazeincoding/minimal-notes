@@ -157,24 +157,16 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
 
   updateNote: ({ id, title, content }) => {
     const notes = get().notes;
-    const currentActiveNote = get().activeNote;
-
     const updatedNotes = notes.map((n) =>
       n.id === id
         ? { ...n, title, content, updatedAt: new Date().toISOString() }
         : n
     );
 
-    // Only update activeNote if it's currently the note being updated
-    const shouldUpdateActiveNote = currentActiveNote?.id === id;
-    const newActiveNote = shouldUpdateActiveNote
-      ? updatedNotes.find((n) => n.id === id) || null
-      : currentActiveNote;
-
     // Update store instantly
     set({
       notes: updatedNotes,
-      activeNote: newActiveNote,
+      activeNote: updatedNotes.find((n) => n.id === id) || null,
     });
 
     // Debounced database sync (500ms delay)

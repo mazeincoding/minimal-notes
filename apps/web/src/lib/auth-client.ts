@@ -14,14 +14,3 @@ export const authClient = createAuthClient({
 
 export const { useSession } = authClient;
 
-export async function disconnectMexc() {
-  const response = await fetch(`${baseUrl}/api/mexc/disconnect`, {
-    method: "POST",
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to disconnect from MEXC");
-  }
-
-  return response.json();
-}

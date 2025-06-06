@@ -16,7 +16,7 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: false,
   },
-  appName: "Mexc+",
+  appName: "Notes+",
   plugins: [
     magicLink({
       sendMagicLink: async ({ email, token, url }, request) => {
@@ -56,9 +56,8 @@ export const auth = betterAuth({
     }),
   ],
   trustedOrigins: [
-    "http://localhost:4000",
-    "http://localhost:4001",
-    "https://mexc-wrapper-177.vercel.app",
+    "http://localhost:3000",
+    "https://notes.mazewinther.com",
   ],
 });
 

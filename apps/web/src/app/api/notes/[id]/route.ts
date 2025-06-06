@@ -7,10 +7,11 @@ import { headers } from "next/headers";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { title, content } = await request.json();
+    const { id } = await params;
 
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -29,7 +30,7 @@ export async function PUT(
         content,
         updatedAt: new Date(),
       })
-      .where(and(eq(notes.id, params.id), eq(notes.userId, userId)))
+      .where(and(eq(notes.id, id), eq(notes.userId, userId)))
       .returning();
 
     if (updatedNote.length === 0) {

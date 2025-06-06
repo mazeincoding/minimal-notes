@@ -40,10 +40,17 @@ export function Editor() {
 function TitleInput() {
   const { activeNote, updateNote } = useNotesStore();
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const previousNoteIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (activeNote && titleInputRef.current) {
-      titleInputRef.current.focus();
+      // Only focus if this is a different note than before
+      if (previousNoteIdRef.current !== activeNote.id) {
+        titleInputRef.current.focus();
+        previousNoteIdRef.current = activeNote.id;
+      }
+    } else if (!activeNote) {
+      previousNoteIdRef.current = null;
     }
   }, [activeNote]);
 

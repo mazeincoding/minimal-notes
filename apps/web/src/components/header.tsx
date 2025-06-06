@@ -3,34 +3,17 @@ import { Button } from "./ui/button";
 import { ChevronLeft, PlusIcon } from "lucide-react";
 import { useNotesStore } from "@/stores/notes-store";
 import { useScreenStore } from "@/stores/screen-store";
-import { useEffect } from "react";
+import { useSession } from "@/lib/auth-client";
 
 export function Header() {
-  const { activeNote, setActiveNote, createNote } = useNotesStore();
-  const { screen, setScreen, goBack, canGoBack, getPreviousScreen } =
+  const { setActiveNote, createNote } = useNotesStore();
+  const { screen, setScreen, goBack, canGoBack, getPreviousScreenDisplayName } =
     useScreenStore();
-
-  useEffect(() => {
-    console.log(screen);
-  }, [screen]);
+  const { data: session } = useSession();
 
   if (screen === "home") {
     return null;
   }
-
-  const previousScreen = getPreviousScreen();
-  const getBackButtonText = () => {
-    switch (previousScreen) {
-      case "home":
-        return "Home";
-      case "notes":
-        return "Notes";
-      case "editor":
-        return "Editor";
-      default:
-        return "Back";
-    }
-  };
 
   const handleBack = () => {
     // Clear active note when leaving editor
@@ -45,27 +28,25 @@ export function Header() {
       <Button
         variant="ghost"
         size="icon"
-        className="!bg-transparent h-auto w-auto p-1 text-primary gap-1.5"
+        className="!bg-transparent h-auto w-auto p-1 !text-primary gap-1.5 disabled:opacity-75"
         onClick={handleBack}
         disabled={!canGoBack()}
       >
         <ChevronLeft className="!size-5 flex-shrink-0" />
         <span className="text-[0.95rem] font-medium mt-0.5">
-          {getBackButtonText()}
+          {getPreviousScreenDisplayName()}
         </span>
       </Button>
 
       <Button
         size="icon"
         variant="ghost"
-        className="!bg-transparent h-auto w-auto p-1 text-primary"
+        className="!bg-transparent h-auto w-auto p-1 !text-primary"
+        disabled={!session}
         onClick={() => {
           createNote({
             title: "New note",
           });
-          setTimeout(() => {
-            setScreen("editor");
-          }, 300);
         }}
       >
         <PlusIcon className="w-4 h-4 flex-shrink-0" />

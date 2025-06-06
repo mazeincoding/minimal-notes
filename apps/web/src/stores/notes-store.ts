@@ -1,5 +1,8 @@
 import { create } from "zustand";
 import { TNote } from "@/types/note";
+import { getErrorMessage, getErrorCode } from "@/types/api";
+import { createAlert } from "./alert-store";
+import { useScreenStore } from "./screen-store";
 
 type NotesStore = {
   notes: TNote[];
@@ -7,6 +10,9 @@ type NotesStore = {
   setActiveNote: (note: TNote | null) => void;
   search: string;
   setSearch: (search: string) => void;
+  isInitialLoad: boolean;
+  newlyCreatedNoteIds: Set<string>;
+  clearNewlyCreatedNote: (id: string) => void;
   createNote: ({ title }: { title: string }) => void;
   updateNote: ({
     id,
@@ -43,15 +49,36 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
   setActiveNote: (note) => set({ activeNote: note }),
   search: "",
   setSearch: (search) => set({ search }),
+  isInitialLoad: true,
+  newlyCreatedNoteIds: new Set(),
+  clearNewlyCreatedNote: (id) => {
+    const newSet = new Set(get().newlyCreatedNoteIds);
+    newSet.delete(id);
+    set({ newlyCreatedNoteIds: newSet });
+  },
 
   loadNotes: async () => {
     try {
       const response = await fetch("/api/notes");
       if (response.ok) {
         const notes = await response.json();
-        set({ notes });
+        set({ notes, isInitialLoad: false });
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        const errorCode = getErrorCode(response, errorData.error);
+        const message = getErrorMessage(errorCode);
+        createAlert({
+          title: "Error",
+          message,
+          buttons: [{ text: "OK", primary: true }],
+        });
       }
     } catch (error) {
+      createAlert({
+        title: "Error",
+        message: "Failed to load notes. Please refresh the page.",
+        buttons: [{ text: "OK", primary: true }],
+      });
       console.error("Failed to load notes:", error);
     }
   },
@@ -59,6 +86,7 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
   createNote: ({ title }) => {
     const date = new Date().toISOString();
     const notes = get().notes;
+    const newlyCreatedNoteIds = get().newlyCreatedNoteIds;
 
     const newNote = {
       id: crypto.randomUUID(),
@@ -68,23 +96,63 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
       updatedAt: date,
     };
 
+    // Track this as a newly created note
+    const updatedNewlyCreatedIds = new Set(newlyCreatedNoteIds);
+    updatedNewlyCreatedIds.add(newNote.id);
+
     // Update store instantly
     set({
       notes: [...notes, newNote],
+      newlyCreatedNoteIds: updatedNewlyCreatedIds,
     });
 
-    // Sync to database in background
+    // Sync to database
     fetch("/api/notes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newNote),
-    }).catch((error) => {
-      console.error("Failed to create note in database:", error);
-      // If database sync fails, set activeNote to null
-      // set({ activeNote: null });
-    });
+    })
+      .then(async (response) => {
+        setTimeout(() => {
+          set({ activeNote: newNote });
+          useScreenStore.getState().setScreen("editor");
+        }, 300);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const errorCode = getErrorCode(response, errorData.error);
+          const message = getErrorMessage(errorCode);
+          createAlert({
+            title: "Error",
+            message,
+            buttons: [{ text: "OK", primary: true }],
+          });
+
+          // Remove the note from store if creation failed
+          const currentNotes = get().notes;
+          set({
+            notes: currentNotes.filter((n) => n.id !== newNote.id),
+            activeNote: null,
+          });
+        }
+      })
+      .catch((error) => {
+        createAlert({
+          title: "Error",
+          message: "Failed to create note. Please try again.",
+          buttons: [{ text: "OK", primary: true }],
+        });
+
+        // Remove the note from store if creation failed
+        const currentNotes = get().notes;
+        set({
+          notes: currentNotes.filter((n) => n.id !== newNote.id),
+          activeNote: null,
+        });
+        console.error("Failed to create note in database:", error);
+      });
   },
 
   updateNote: ({ id, title, content }) => {
@@ -106,14 +174,30 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
       `update-${id}`,
       async () => {
         try {
-          await fetch(`/api/notes/${id}`, {
+          const response = await fetch(`/api/notes/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ title, content }),
           });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            const errorCode = getErrorCode(response, errorData.error);
+            const message = getErrorMessage(errorCode);
+            createAlert({
+              title: "Error",
+              message,
+              buttons: [{ text: "OK", primary: true }],
+            });
+          }
         } catch (error) {
+          createAlert({
+            title: "Error",
+            message: "Failed to save changes. Please try again.",
+            buttons: [{ text: "OK", primary: true }],
+          });
           console.error("Failed to update note in database:", error);
         }
       },

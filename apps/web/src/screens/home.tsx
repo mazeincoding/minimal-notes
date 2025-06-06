@@ -3,9 +3,11 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useScreenStore } from "@/stores/screen-store";
 import { ChevronRightIcon, FileTextIcon, UserIcon } from "lucide-react";
+import { useSession } from "@/lib/auth-client";
 
 export function Home() {
   const { screen, setScreen } = useScreenStore();
+  const { data: session } = useSession();
 
   const items = [
     {
@@ -18,10 +20,10 @@ export function Home() {
     },
     {
       icon: UserIcon,
-      title: "Account",
+      title: session ? "Account" : "Sign in",
       color: "bg-rose-500",
       onClick: () => {
-        // setScreen("account");
+        setScreen(session ? "account" : "signin");
       },
     },
   ];

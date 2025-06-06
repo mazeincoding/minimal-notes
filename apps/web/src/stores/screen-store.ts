@@ -1,6 +1,15 @@
 import { create } from "zustand";
 
-type Screen = "home" | "notes" | "editor";
+type Screen = "home" | "notes" | "editor" | "account" | "signin";
+
+// Screen display configuration
+const SCREEN_CONFIG: Record<Screen, { displayName: string }> = {
+  home: { displayName: "Home" },
+  notes: { displayName: "Notes" },
+  editor: { displayName: "Editor" },
+  account: { displayName: "Account" },
+  signin: { displayName: "Sign in" },
+};
 
 interface ScreenStore {
   screen: Screen;
@@ -9,11 +18,13 @@ interface ScreenStore {
   goBack: () => void;
   canGoBack: () => boolean;
   getPreviousScreen: () => Screen | null;
+  getScreenDisplayName: (screen: Screen) => string;
+  getPreviousScreenDisplayName: () => string;
 }
 
 export const useScreenStore = create<ScreenStore>((set, get) => ({
-  screen: "home",
-  navigationStack: ["home"],
+  screen: "notes",
+  navigationStack: ["home", "notes"],
 
   setScreen: (screen) => {
     const { navigationStack, screen: currentScreen } = get();
@@ -51,5 +62,15 @@ export const useScreenStore = create<ScreenStore>((set, get) => ({
     const { navigationStack } = get();
     if (navigationStack.length <= 1) return null;
     return navigationStack[navigationStack.length - 2];
+  },
+
+  getScreenDisplayName: (screen) => {
+    return SCREEN_CONFIG[screen]?.displayName || "Back";
+  },
+
+  getPreviousScreenDisplayName: () => {
+    const previousScreen = get().getPreviousScreen();
+    if (!previousScreen) return "Back";
+    return get().getScreenDisplayName(previousScreen);
   },
 }));

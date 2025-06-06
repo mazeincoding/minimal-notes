@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useNotesStore } from "@/stores/notes-store";
 import { useScreenStore } from "@/stores/screen-store";
+import { useEffect, useRef } from "react";
 
 export function Editor() {
   const { activeNote, updateNote } = useNotesStore();
@@ -12,7 +13,7 @@ export function Editor() {
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.2rem] z-20 bg-background transition-transform duration-300 ease-in-out pb-6",
+        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.5rem] z-20 bg-background transition-transform duration-300 ease-in-out pb-6",
         activeNote && screen === "editor" ? "translate-x-0" : "translate-x-full"
       )}
     >
@@ -38,9 +39,17 @@ export function Editor() {
 
 function TitleInput() {
   const { activeNote, updateNote } = useNotesStore();
+  const titleInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (activeNote && titleInputRef.current) {
+      titleInputRef.current.focus();
+    }
+  }, [activeNote]);
 
   return (
     <Input
+      ref={titleInputRef}
       type="text"
       value={activeNote?.title || ""}
       onChange={(e) =>

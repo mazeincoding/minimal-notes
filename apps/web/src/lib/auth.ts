@@ -17,69 +17,6 @@ export const auth = betterAuth({
     requireEmailVerification: false,
   },
   appName: "Mexc+",
-  rateLimit: {
-    enabled: true,
-    window: 10,
-    max: 100,
-    customRules: {
-      "/api/*": {
-        window: 10,
-        max: 100,
-      },
-      "/api/mexc/disconnect": {
-        window: 60,
-        max: 10,
-      },
-      "/api/mexc/store-keys": {
-        window: 60,
-        max: 5,
-      },
-      "/api/mexc/price": {
-        window: 10,
-        max: 30,
-      },
-      "/api/mexc/coins": {
-        window: 60,
-        max: 5,
-      },
-      "/api/mexc/account/trades": {
-        window: 10,
-        max: 20,
-      },
-      "/api/mexc/account/trades/execute": {
-        window: 60,
-        max: 10,
-      },
-      "/api/mexc/account/assets": {
-        window: 10,
-        max: 30,
-      },
-
-      // Currency conversion
-      "/api/currency/convert": {
-        window: 10,
-        max: 50,
-      },
-
-      // Search and metadata - moderate limits
-      "/api/search": {
-        window: 10,
-        max: 50,
-      },
-      "/api/coin/metadata": {
-        window: 10,
-        max: 50,
-      },
-
-      // Individual coin routes - higher limits for frequent access
-      "/api/coin/*": {
-        window: 10,
-        max: 100,
-      },
-    },
-    storage: "database",
-    modelName: "rateLimit",
-  },
   plugins: [
     magicLink({
       sendMagicLink: async ({ email, token, url }, request) => {

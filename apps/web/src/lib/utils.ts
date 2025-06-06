@@ -48,14 +48,14 @@ export function groupNotesByMonth(notes: TNote[]) {
     groups.get(monthKey)!.push(note);
   });
 
-  // Sort groups by date (newest first) and sort notes within each group
+  // Sort groups by date (newest first) and sort notes within each group by last updated
   return Array.from(groups.entries())
     .sort(([a], [b]) => new Date(b).getTime() - new Date(a).getTime())
     .map(([monthKey, groupNotes]) => ({
       monthKey,
       notes: groupNotes.sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       ),
     }));
 }

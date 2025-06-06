@@ -13,7 +13,7 @@ export function Editor() {
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.5rem] z-20 bg-background transition-transform duration-300 ease-in-out pb-6",
+        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.8rem] z-20 bg-background transition-transform duration-300 ease-in-out pb-6",
         activeNote && screen === "editor" ? "translate-x-0" : "translate-x-full"
       )}
     >

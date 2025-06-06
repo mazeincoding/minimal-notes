@@ -15,7 +15,7 @@ export function Theme() {
       value: "light",
     },
     {
-      label: "Dark", 
+      label: "Dark",
       value: "dark",
     },
     {
@@ -27,7 +27,7 @@ export function Theme() {
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.5rem] z-10 bg-background-secondary transition-transform duration-300 ease-in-out",
+        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.8rem] z-10 bg-background-secondary transition-transform duration-300 ease-in-out",
         screen === "theme" ? "translate-x-0" : "translate-x-full"
       )}
     >

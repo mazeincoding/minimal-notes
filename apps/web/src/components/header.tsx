@@ -32,8 +32,8 @@ export function Header() {
         onClick={handleBack}
         disabled={!canGoBack()}
       >
-        <ChevronLeft className="!size-5 flex-shrink-0" />
-        <span className="text-[0.95rem] font-medium mt-0.5">
+        <ChevronLeft className="!size-6 flex-shrink-0" />
+        <span className="text-[1rem] font-medium mt-0.5">
           {getPreviousScreenDisplayName()}
         </span>
       </Button>

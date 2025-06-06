@@ -26,7 +26,7 @@ export function Notes() {
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.5rem] z-10 bg-background-secondary transition-transform duration-300 ease-in-out",
+        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.8rem] z-10 bg-background-secondary transition-transform duration-300 ease-in-out",
         screen === "notes" || screen === "editor"
           ? "translate-x-0"
           : "translate-x-full"
@@ -123,7 +123,7 @@ function NoteCard({
         }}
       >
         <h1 className="text-base font-semibold">{note.title}</h1>
-        <p className="text-[0.85rem] text-muted-foreground">
+        <p className="text-[0.84.8rem] text-muted-foreground">
           {formatTime(note.createdAt)}
         </p>
       </Card>

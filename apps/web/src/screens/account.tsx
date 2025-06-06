@@ -75,7 +75,7 @@ export function Account() {
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.5rem] z-10 bg-background-secondary transition-transform duration-300 ease-in-out",
+        "flex flex-col gap-2 h-full px-6 fixed inset-0 pt-[4.8rem] z-10 bg-background-secondary transition-transform duration-300 ease-in-out",
         screen === "account" ? "translate-x-0" : "translate-x-full"
       )}
     >

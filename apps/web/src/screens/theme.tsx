@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { useScreenStore } from "@/stores/screen-store";
 import { Card } from "@/components/ui/card";
 import { useTheme } from "next-themes";
+import { CheckIcon } from "lucide-react";
 
 export function Theme() {
   const { screen } = useScreenStore();
@@ -46,11 +47,14 @@ export function Theme() {
               key={t.value}
               className={cn(
                 "flex items-center justify-between",
-                theme === t.value && "bg-foreground/10"
+                theme === t.value && "text-primary"
               )}
               onClick={() => setTheme(t.value)}
             >
               <h3 className="text-base font-medium">{t.label}</h3>
+              {theme === t.value && (
+                <CheckIcon className="size-4 text-primary" />
+              )}
             </Card>
           ))}
         </div>
